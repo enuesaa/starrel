@@ -37,8 +37,12 @@
     "vitest": "^4.0.8"
   },
   "prettier": {
-    "printWidth": 100,
+    "printWidth": 120,
+    "tabWidth": 2,
+    "semi": false,
     "singleQuote": true,
+    "endOfLine": "lf",
+    "trailingComma": "es5",
     "overrides": [
       {
         "files": "*.html",
