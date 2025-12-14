@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core'
 
 @Component({
-  selector: 'app-top',
   imports: [],
   templateUrl: './top.html',
 })
 export class Top {
-
+  protected readonly title = signal('starrel')
+  protected readonly message = signal('hello')
 }
