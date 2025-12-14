@@ -9,3 +9,7 @@ node_modules
 
 # angular
 .angular
+
+# api
+__pycache__
+.venv
