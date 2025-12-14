@@ -6,6 +6,7 @@
     "dev": "ng serve --port 3000",
     "build": "ng build",
     "test": "ng test",
+    "format": "prettier --write src/*",
     "serve:ssr:starrel": "node dist/starrel/server/server.mjs"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
+    "prettier": "^3.7.4",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
@@ -46,12 +48,12 @@
       }
     ]
   },
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@parcel/watcher",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
       "esbuild",
       "lmdb",
       "msgpackr-extract"
-		]
-	}
+    ]
+  }
 }
