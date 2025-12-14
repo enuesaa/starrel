@@ -3,23 +3,10 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "start": "ng serve",
+    "dev": "ng serve --port 3000",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:starrel": "node dist/starrel/server/server.mjs"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "singleQuote": true,
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
   },
   "dependencies": {
     "@angular/common": "^21.0.0",
@@ -46,5 +33,25 @@
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
-  }
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@parcel/watcher",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract"
+		]
+	}
 }
