@@ -1,4 +1,4 @@
-name: ci
+name: deploy
 
 on:
   workflow_dispatch:
@@ -15,14 +15,16 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: '9'
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.10'
       - uses: astral-sh/setup-uv@v7
       
       - run: pnpm install
       - run: pnpm build
-      - run: uv sync
-        working-directory: api
-      
-      - run: pnpm swa deploy --deployment-token ${{ secrets.SWA_DEPLOY_TOKEN }}
+
+      - working-directory: api
+        run: uv python install
+      - working-directory: api
+        run: uv sync        
+
+      - run: pnpm swa deploy --env production
+        env:
+          SWA_CLI_DEPLOYMENT_TOKEN: ${{ secrets.SWA_DEPLOY_TOKEN }}
