@@ -1,6 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/staticwebapp.config.json",
   "platform": {
-    "apiRuntime": "python:3.10"
+    "apiRuntime": "python:3.11"
   }
 }
