@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-class UserItem(BaseModel):
+class Bookmark(BaseModel):
     id: str
     pk: str
-    name: str
+    url: str
     count: int

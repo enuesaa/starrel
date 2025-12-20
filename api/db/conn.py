@@ -27,6 +27,6 @@ def create_database():
 def get_database():
     return client.get_database_client(database="sampledb")
 
-def get_container():
+def connect():
     database = get_database()
     return database.get_container_client(container="items")

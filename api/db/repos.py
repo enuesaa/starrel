@@ -1,41 +1,33 @@
-from db.conn import get_container
-from db.models import UserItem
+from db.conn import connect
+from db.models import Bookmark
 from azure.cosmos.errors import CosmosResourceNotFoundError
 
-def list_by_pk(pk: str) -> list[UserItem]:
-    container = get_container()
-    query = """
-    SELECT * FROM c
-    WHERE c.pk = @pk
-    """
-    items = container.query_items(
-        query=query,
-        parameters=[{"name": "@pk", "value": pk}],
+def list_bookmarks() -> list[Bookmark]:
+    db = connect()
+    items = db.query_items(
+        query="SELECT * FROM c WHERE c.pk = @pk",
+        parameters=[{"name": "@pk", "value": "favorite"}],
         enable_cross_partition_query=False,
     )
-    return [UserItem.model_validate(i) for i in items]
+    return [Bookmark.model_validate(i) for i in items]
 
-def get(user_id: str, pk: str) -> UserItem | None:
-    container = get_container()
+def get_bookmark(id: str) -> Bookmark|None:
+    db = connect()
     try:
-        data = container.read_item(
-            item=user_id,
-            partition_key=pk,
+        data = db.read_item(
+            item=id,
+            partition_key="/favorite",
         )
     except CosmosResourceNotFoundError:
         return None
-    return UserItem.model_validate(data)
+    return Bookmark.model_validate(data)
 
-def upsert(user: UserItem) -> UserItem:
-    container = get_container()
-    data = container.upsert_item(
-        user.model_dump(by_alias=True)
-    )
-    return UserItem.model_validate(data)
+def upsert_bookmark(bookmark: Bookmark) -> Bookmark:
+    bookmark.pk = "favorite"
+    db = connect()
+    data = db.upsert_item(bookmark.model_dump(by_alias=True))
+    return Bookmark.model_validate(data)
 
-def delete(user_id: str, pk: str) -> None:
-    container = get_container()
-    container.delete_item(
-        item=user_id,
-        partition_key=pk,
-    )
+def delete_bookmark(id: str) -> None:
+    db = connect()
+    db.delete_item(item=id, partition_key="/favorite")
