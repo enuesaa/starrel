@@ -9,6 +9,7 @@ node_modules
 
 # angular
 .angular
+dist
 
 # api
 __pycache__
