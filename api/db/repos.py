@@ -5,8 +5,8 @@ from azure.cosmos.errors import CosmosResourceNotFoundError
 def list_bookmarks() -> list[Bookmark]:
     db = connect()
     items = db.query_items(
-        query="SELECT * FROM c WHERE c.pk = @pk",
-        parameters=[{"name": "@pk", "value": "favorite"}],
+        query="SELECT * FROM c WHERE c.type = @type",
+        parameters=[{"name": "@type", "value": "favorite"}],
         enable_cross_partition_query=False,
     )
     return [Bookmark.model_validate(i) for i in items]
@@ -23,7 +23,7 @@ def get_bookmark(id: str) -> Bookmark|None:
     return Bookmark.model_validate(data)
 
 def upsert_bookmark(bookmark: Bookmark) -> Bookmark:
-    bookmark.pk = "favorite"
+    bookmark.type = "favorite"
     db = connect()
     data = db.upsert_item(bookmark.model_dump(by_alias=True))
     return Bookmark.model_validate(data)
