@@ -7,9 +7,10 @@
       "run": "pnpm dev",
       "appBuildCommand": "pnpm build",
       "appDevserverUrl": "http://localhost:3000",
-      "apiLocation": "api/dist",
+      "apiLocation": "api",
       "apiLanguage": "python",
       "apiVersion": "3.11",
+      "apiBuildCommand": "rm -rf .python_packages && uv pip install -r pyproject.toml --python-platform x86_64-unknown-linux-gnu --no-installer-metadata --no-compile-bytecode --target .python_packages/lib/site-packages",
       "swaConfigLocation": "."
     }
   }

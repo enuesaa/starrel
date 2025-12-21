@@ -14,17 +14,16 @@ jobs:
           node-version: '22'
       - uses: pnpm/action-setup@v4
         with:
-          version: '9'
-      - uses: astral-sh/setup-uv@v7
-      
+          version: '9'      
       - run: pnpm install
-      - run: pnpm build
 
+      - uses: astral-sh/setup-uv@v7
       - working-directory: api
         run: uv python install
       - working-directory: api
         run: uv sync        
 
+      - run: pnpm swa build
       - run: pnpm swa deploy --env production
         env:
           SWA_CLI_DEPLOYMENT_TOKEN: ${{ secrets.SWA_DEPLOY_TOKEN }}
