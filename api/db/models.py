@@ -1,6 +1,6 @@
-# from pydantic import BaseModel
+from pydantic import BaseModel
 
-# class Bookmark(BaseModel):
-#     id: str
-#     type: str
-#     url: str
+class Bookmark(BaseModel):
+    id: str
+    type: str
+    url: str

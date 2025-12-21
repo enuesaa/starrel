@@ -1,7 +1,5 @@
-from azure.cosmos import CosmosClient, PartitionKey
+from azure.cosmos import CosmosClient
 import os
-# import urllib3
-# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 dbendpoint = os.environ["DB_ENDPOINT"]
 dbkey = os.environ["DB_KEY"]
