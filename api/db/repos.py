@@ -1,6 +1,6 @@
 # from conn import connect
 # from db.models import Bookmark
-# from azure.cosmos.errors import CosmosResourceNotFoundError
+from azure.cosmos.errors import CosmosResourceNotFoundError
 
 from azure.cosmos import CosmosClient, PartitionKey
 import os
@@ -14,7 +14,7 @@ def get_database():
     client = CosmosClient(
         dbendpoint,
         credential=dbkey,
-        # connection_verify=False,
+        connection_verify=False,
     )
     return client.get_database_client(database="starrel")
 
