@@ -57,9 +57,7 @@
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "esbuild",
-      "lmdb",
-      "msgpackr-extract",
-      "keytar"
+      "lmdb"
     ]
   }
 }

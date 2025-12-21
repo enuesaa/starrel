@@ -1,5 +1,5 @@
-from db.conn import connect
-from db.models import Bookmark
+from conn import connect
+from models import Bookmark
 from azure.cosmos.errors import CosmosResourceNotFoundError
 
 def list_bookmarks() -> list[Bookmark]:
