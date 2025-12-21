@@ -9,9 +9,3 @@
 - Azure Functions (python)
   - Static Web Apps のマネージドAPIとしてデプロイ
 - Cosmos DB
-
-## TODO
-- Azure Functions と Cosmos DB の疎通
-  - https://qiita.com/Futo_Horio/items/f3fc7c06108dd2eae475
-- 認可をどうするか。
-  - Auth0 にしようかな
