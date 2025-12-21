@@ -1,0 +1,10 @@
+version: '3'
+
+dotenv: ['.env']
+
+tasks:
+  default:
+    cmds:
+      - pnpm swa build
+      - pnpm swa deploy --env production
+      - curl $SWA_API_URL -X GET -v
