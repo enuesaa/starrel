@@ -17,6 +17,10 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: '9'
-      
+      - uses: astral-sh/setup-uv@v7
+
       - run: pnpm install
-      - run: pnpm build
+      - working-directory: api
+        run: uv python install && uv sync
+
+      - run: pnpm swa build
