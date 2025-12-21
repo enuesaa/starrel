@@ -1,13 +1,10 @@
 # misc
 .DS_Store
-
-# editor
 .vscode
+.env
 
-# node
+# ui
 node_modules
-
-# angular
 .angular
 dist
 
@@ -16,4 +13,3 @@ __pycache__
 .venv
 *.zip
 .python_packages
-.env

@@ -1,7 +1,7 @@
 {
   "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
   "configurations": {
-    "azure-web-staticapp-try": {
+    "starrel": {
       "appLocation": ".",
       "outputLocation": "dist/starrel/browser",
       "run": "pnpm dev",
