@@ -1,7 +1,7 @@
 import azure.functions as func
 from db.repos import upsert_bookmark, list_bookmarks, get_bookmark
 from db.models import Bookmark
-from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
+from db.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
 
 app = func.FunctionApp()
 
@@ -18,10 +18,10 @@ def handle_get_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
     try:
         id = req.route_params.get('id')
         if id is None:
-            return ErrorResponse(error=None).err400()
+            return ErrorResponse().err404()
         bookmark = get_bookmark(id=id)
         if bookmark is None:
-            return ErrorResponse(error=None).err400()
+            return ErrorResponse().err404()
         return ViewResponse(data=bookmark).ok()
     except Exception as e:
         return ErrorResponse(error=e).err400()
