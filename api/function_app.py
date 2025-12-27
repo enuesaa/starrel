@@ -1,7 +1,7 @@
 import azure.functions as func
 from db.repos import upsert_bookmark, list_bookmarks, get_bookmark
 from db.models import Bookmark
-from db.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
+from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
 
 app = func.FunctionApp()
 
