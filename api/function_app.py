@@ -17,7 +17,7 @@ def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
 @app.route(route="bookmarks", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def create_bookmark(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        bookmark = Bookmark(id=str(ULID()), type='favorite', url='https://example.com/')
+        bookmark = Bookmark(id=str(ULID()), type='favorite', url='https://example.com/', title='a', description=None, image=None)
         upsert_bookmark(bookmark=bookmark)
         return func.HttpResponse('{"ok": true}', mimetype="application/json", status_code=200)
     except Exception as e:
