@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
+import { AddBookmarkComponent } from './add-bookmark.component'
+import { BookmarksListComponent } from './bookmarks-list.component'
 
 interface Bookmark {
   id: string
@@ -11,7 +13,7 @@ interface Bookmark {
 
 @Component({
   selector: 'app-top',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddBookmarkComponent, BookmarksListComponent],
   templateUrl: './top.html',
 })
 export class Top {
@@ -43,15 +45,26 @@ export class Top {
     }
   }
 
-  deleteBookmark(id: string) {
-    this.bookmarks.update((current) => current.filter((b) => b.id !== id))
+  onAddBookmarkClick(url: string) {
+    const trimmedUrl = url.trim()
+    if (!trimmedUrl) return
+
+    try {
+      new URL(trimmedUrl)
+      const title = new URL(trimmedUrl).hostname || trimmedUrl
+      const bookmark: Bookmark = {
+        id: Date.now().toString(),
+        url: trimmedUrl,
+        title,
+        createdAt: new Date(),
+      }
+      this.bookmarks.update((current) => [bookmark, ...current])
+    } catch {
+      alert('Invalid URL')
+    }
   }
 
-  getDomain(url: string): string {
-    try {
-      return new URL(url).hostname || url
-    } catch {
-      return url
-    }
+  deleteBookmark(id: string) {
+    this.bookmarks.update((current) => current.filter((b) => b.id !== id))
   }
 }
