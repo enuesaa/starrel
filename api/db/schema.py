@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from db.models import Bookmark
 from typing import List
 import azure.functions as func
@@ -22,6 +22,7 @@ class CreateResponse(BaseModel):
         return func.HttpResponse(self.model_dump_json(), mimetype='application/json', status_code=200)
 
 class ErrorResponse(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     error: Exception|None = Field(default=None)
 
     def err400(self) -> func.HttpResponse:
