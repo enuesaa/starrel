@@ -2,9 +2,21 @@
   <!-- Header -->
   <header class="bg-slate-900 border-b border-slate-800">
     <div class="max-w-4xl mx-auto px-6 py-3">
-      <h1 class="text-2xl font-bold text-white">
-        {{ title() }}
-      </h1>
+      <div class="flex items-center justify-between">
+        <a
+          routerLink="/"
+          class="text-2xl font-bold text-white hover:text-slate-400 transition-colors cursor-pointer inline-block"
+        >
+          {{ title }}
+        </a>
+        <button
+          (click)="goToSearch()"
+          class="text-white hover:text-slate-400 transition-colors text-xl"
+          title="Search bookmarks"
+        >
+          search
+        </button>
+      </div>
     </div>
   </header>
 
@@ -21,4 +33,3 @@
     ></app-bookmarks-list>
   </main>
 </div>
-

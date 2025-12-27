@@ -25,12 +25,6 @@ export class BookmarksListComponent {
     this.deleteBookmark.emit(id)
   }
 
-  onBookmarkClick(id: string, event: Event) {
-    event.preventDefault()
-    event.stopPropagation()
-    this.router.navigate(['/bookmark', id])
-  }
-
   getDomain(url: string): string {
     try {
       return new URL(url).hostname || url
