@@ -2,12 +2,17 @@ import azure.functions as func
 from db.repos import upsert_bookmark, list_bookmarks, get_bookmark
 from db.models import Bookmark
 from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
+from auth.auth import verify_jwt
 
 app = func.FunctionApp()
 
 @app.route(route='bookmarks', methods=['GET'], auth_level=func.AuthLevel.ANONYMOUS)
 def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
     try:
+        token = req.headers.get('Authorization')
+        if token is None:
+            return ErrorResponse().err404()
+        verify_jwt(token)
         bookmarks = list_bookmarks()
         return ListResponse(items=bookmarks).ok()
     except Exception as e:
