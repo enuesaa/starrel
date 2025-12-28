@@ -1,25 +1,16 @@
-import jwt
-import requests
-from jwt.algorithms import RSAAlgorithm
 import os
+from auth0_api_python import ApiClient, ApiClientOptions
+import asyncio
 
 auth_domain = os.environ["AUTH_DOMAIN"]
 auth_audience = os.environ["AUTH_AUDIENCE"]
 
-def get_signing_key(token):
-    jwks = requests.get(f"https://{auth_domain}/.well-known/jwks.json").json()
-    unverified = jwt.get_unverified_header(token)
-    for key in jwks["keys"]:
-        if key["kid"] == unverified["kid"]:
-            return RSAAlgorithm.from_jwk(key)
-    raise Exception("Signing key not found")
-
-def verify_jwt(token: str):
-    key = get_signing_key(token)
-    return jwt.decode(
-        token,
-        key=key, # type: ignore
-        algorithms=["RS256"],
+async def verify_jwt(token: str):
+    client = ApiClient(ApiClientOptions(
+        domain=auth_domain,
         audience=auth_audience,
-        issuer=f"https://{auth_domain}/"
-    )
+    ))
+    return await client.verify_access_token(access_token=token)
+
+def verify(token: str):
+    return asyncio.run(verify_jwt(token=token))
