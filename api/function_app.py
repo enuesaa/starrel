@@ -11,8 +11,11 @@ def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
     try:
         token = req.headers.get('Authorization')
         if token is None:
-            return ErrorResponse().err404()
+            return ErrorResponse().err403()
         verify(token)
+    except Exception as e:
+        return ErrorResponse(error=e).err400()
+    try:
         bookmarks = list_bookmarks()
         return ListResponse(items=bookmarks).ok()
     except Exception as e:

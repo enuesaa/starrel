@@ -28,5 +28,8 @@ class ErrorResponse(BaseModel):
     def err400(self) -> func.HttpResponse:
         return func.HttpResponse(self.model_dump_json(), mimetype='application/json', status_code=400)
     
+    def err403(self) -> func.HttpResponse:
+        return func.HttpResponse(self.model_dump_json(), mimetype='application/json', status_code=403)
+
     def err404(self) -> func.HttpResponse:
         return func.HttpResponse('{}', mimetype='application/json', status_code=404)
