@@ -10,4 +10,12 @@ import { CommonModule } from '@angular/common'
 })
 export class ProfileComponent {
   protected auth = inject(AuthService)
+
+  logout(): void {
+    this.auth.logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    })
+  }
 }
