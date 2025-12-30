@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core'
 import { AuthService } from '@auth0/auth0-angular'
 
 @Component({
-  selector: 'app-logout-button',
+  selector: 'app-logout',
   standalone: true,
-  templateUrl: './logout-button.component.html',
+  templateUrl: './logout.component.html',
 })
-export class LogoutButtonComponent {
+export class LogoutComponent {
   private auth = inject(AuthService)
 
   logout(): void {
