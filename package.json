@@ -4,10 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "ng serve --port 3000",
-    "build": "ng build",
+    "build:local": "ng build -c local",
+    "build:prod": "ng build -c prod",
     "test": "ng test",
-    "format": "prettier --write src/*",
-    "serve:ssr:starrel": "node dist/starrel/server/server.mjs"
+    "format": "prettier --write src/*"
   },
   "dependencies": {
     "@angular/common": "^21.0.0",
