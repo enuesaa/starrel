@@ -1,0 +1,27 @@
+version: '3'
+
+env:
+  TOKEN: xxx
+  AUTH_AUDIENCE: https://example.com
+  AUTH_DOMAIN: example.com
+
+tasks:
+  default:
+    desc: deploy
+    env:
+      SWA_CLI_DEPLOYMENT_TOKEN: 
+      SWA_API_URL: https://example.com/api/bookmarks
+    cmds:
+      - pnpm swa build
+      - pnpm swa deploy --env production
+      - task: call
+
+  call:
+    desc: call api
+    cmd: |
+      curl $SWA_API_URL -X GET --header "X-Authorization: Bearer $TOKEN" -v
+
+  debug:
+    desc: debug api in local
+    dir: api
+    cmd: uv run main.py
