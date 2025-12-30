@@ -5,7 +5,7 @@
       "appLocation": ".",
       "outputLocation": "dist/starrel/browser",
       "run": "pnpm dev",
-      "appBuildCommand": "pnpm build",
+      "appBuildCommand": "pnpm build:prod",
       "appDevserverUrl": "http://localhost:3000",
       "apiLocation": "api",
       "apiLanguage": "python",
