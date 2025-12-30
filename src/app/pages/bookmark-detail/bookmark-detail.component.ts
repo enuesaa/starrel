@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
+import { HeaderComponent } from '../../components/header/header.component'
 
 @Component({
   selector: 'app-bookmark-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './bookmark-detail.component.html',
 })
 export class BookmarkDetailComponent implements OnInit {
@@ -20,10 +21,6 @@ export class BookmarkDetailComponent implements OnInit {
     // In a real app, you would fetch the bookmark from a service
     // For now, we'll use the ID as a placeholder
     this.bookmarkUrl = `https://example.com/${this.bookmarkId}`
-  }
-
-  goBack() {
-    this.router.navigate(['/'])
   }
 
   openBookmark() {

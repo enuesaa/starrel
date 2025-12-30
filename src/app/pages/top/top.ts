@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router'
 import { AddBookmarkComponent } from './add-bookmark.component'
 import { BookmarksListComponent } from './bookmarks-list.component'
 import { BookmarkService } from '../../services/bookmark.service'
+import { HeaderComponent } from '../../components/header/header.component'
 import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-top',
-  imports: [CommonModule, RouterModule, AddBookmarkComponent, BookmarksListComponent],
+  imports: [CommonModule, RouterModule, AddBookmarkComponent, BookmarksListComponent, HeaderComponent],
   templateUrl: './top.html',
 })
 export class Top {
@@ -32,9 +33,5 @@ export class Top {
 
   deleteBookmark(id: string) {
     this.bookmarkService.deleteBookmark(id)
-  }
-
-  goToSearch() {
-    this.router.navigate(['/search'])
   }
 }

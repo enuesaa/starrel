@@ -2,11 +2,12 @@ import { Component, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { BookmarkService, Bookmark } from '../../services/bookmark.service'
+import { HeaderComponent } from '../../components/header/header.component'
 
 @Component({
   selector: 'app-domain-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, HeaderComponent],
   templateUrl: './domain-list.component.html',
 })
 export class DomainListComponent implements OnInit {
@@ -24,10 +25,6 @@ export class DomainListComponent implements OnInit {
 
   loadBookmarksByDomain() {
     this.bookmarks = this.bookmarkService.getBookmarksByDomain(this.domain)
-  }
-
-  goBack() {
-    this.router.navigate(['/'])
   }
 
   openBookmark(url: string) {

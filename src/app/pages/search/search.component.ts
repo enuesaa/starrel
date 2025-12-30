@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common'
 import { Router, RouterModule, ActivatedRoute } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import { BookmarkService, Bookmark } from '../../services/bookmark.service'
+import { HeaderComponent } from '../../components/header/header.component'
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent],
   templateUrl: './search.component.html',
 })
 export class SearchComponent implements OnInit {
