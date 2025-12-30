@@ -15,6 +15,8 @@ export const appConfig: ApplicationConfig = {
       authorizationParams: {
         redirect_uri: window.location.href,
       },
+      cacheLocation: 'localstorage',
+      useRefreshTokens: true,
     }),
   ],
 }
