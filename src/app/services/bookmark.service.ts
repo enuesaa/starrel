@@ -41,9 +41,7 @@ export class BookmarkService {
   searchBookmarks(query: string): Bookmark[] {
     const lowerQuery = query.toLowerCase()
     return this.bookmarks().filter(
-      (b) =>
-        b.title.toLowerCase().includes(lowerQuery) ||
-        b.url.toLowerCase().includes(lowerQuery),
+      (b) => b.title.toLowerCase().includes(lowerQuery) || b.url.toLowerCase().includes(lowerQuery)
     )
   }
 
