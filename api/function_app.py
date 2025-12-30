@@ -9,13 +9,10 @@ app = func.FunctionApp()
 @app.route(route='bookmarks', methods=['GET'], auth_level=func.AuthLevel.ANONYMOUS)
 def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        token = req.headers.get('Authorization')
-        if token is None:
+        authheader = req.headers.get('X-Authorization')
+        if not isinstance(authheader, str) or not authheader.startswith('Bearer '):
             return ErrorResponse().err403()
-        verify(token)
-    except Exception as e:
-        return ErrorResponse(error=e).err400()
-    try:
+        verify(authheader)
         bookmarks = list_bookmarks()
         return ListResponse(items=bookmarks).ok()
     except Exception as e:

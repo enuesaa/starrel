@@ -2,10 +2,11 @@ import os
 from auth0_api_python import ApiClient, ApiClientOptions
 import asyncio
 
-auth_domain = os.environ["AUTH_DOMAIN"]
-auth_audience = os.environ["AUTH_AUDIENCE"]
+auth_domain = os.environ['AUTH_DOMAIN']
+auth_audience = os.environ['AUTH_AUDIENCE']
 
-def verify(token: str):
+def verify(authheader: str):
+    token = authheader.split(' ')[1]
     client = ApiClient(ApiClientOptions(
         domain=auth_domain,
         audience=auth_audience,
