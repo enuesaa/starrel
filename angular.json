@@ -28,6 +28,7 @@
             ]
           },
           "configurations": {
+            "local": {},
             "prod": {
               "outputHashing": "all",
               "fileReplacements": [
@@ -36,17 +37,23 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            },
-            "local": {}
+            }
           },
-          "defaultConfiguration": "prod"
+          "defaultConfiguration": "local"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
             "local": {
               "buildTarget": "starrel:build:local"
+            },
+            "prod": {
+              "buildTarget": "starrel:build:prod"
             }
+          },
+          "options": {
+            "prebundle": false,
+            "port": 3000
           },
           "defaultConfiguration": "local"
         },
