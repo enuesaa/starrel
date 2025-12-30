@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router'
 import { AddBookmarkComponent } from './add-bookmark.component'
 import { BookmarksListComponent } from './bookmarks-list.component'
 import { BookmarkService } from '../../services/bookmark.service'
+import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-top',
@@ -14,7 +15,8 @@ export class Top {
   private router = inject(Router)
   protected bookmarkService = inject(BookmarkService)
 
-  protected readonly title = 'Starrel'
+  protected readonly title = environment.appName
+  protected readonly environment = environment
 
   get bookmarks() {
     return this.bookmarkService.bookmarks

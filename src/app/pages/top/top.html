@@ -7,7 +7,7 @@
           routerLink="/"
           class="text-2xl font-bold text-white hover:text-slate-400 transition-colors cursor-pointer inline-block"
         >
-          {{ title }}
+          {{ title }} <span class="text-sm text-slate-400">v{{ environment.appVersion }}</span>
         </a>
         <button
           (click)="goToSearch()"
