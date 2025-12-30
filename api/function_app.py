@@ -14,8 +14,7 @@ def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
             return ErrorResponse().err403()
         verify(token)
     except Exception as e:
-        return func.HttpResponse('a', status_code=403)
-        # return ErrorResponse(error=e).err400()
+        return ErrorResponse(error=e).err400()
     try:
         bookmarks = list_bookmarks()
         return ListResponse(items=bookmarks).ok()
