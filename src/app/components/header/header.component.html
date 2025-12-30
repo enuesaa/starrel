@@ -68,7 +68,7 @@
             <div class="relative">
               <button
                 (click)="toggleUserMenu()"
-                class="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                class="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
                 title="User menu"
               >
                 @if (user.picture) {
@@ -87,7 +87,7 @@
                   </div>
                   <button
                     (click)="logout()"
-                    class="w-full text-left px-4 py-2 text-red-400 hover:bg-slate-700 transition-colors rounded-b-lg"
+                    class="w-full text-left px-4 py-2 text-red-400 hover:bg-slate-700 transition-colors rounded-b-lg cursor-pointer"
                   >
                     Log Out
                   </button>
