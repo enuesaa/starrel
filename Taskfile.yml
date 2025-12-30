@@ -7,5 +7,6 @@ tasks:
     cmds:
       - pnpm swa build
       - pnpm swa deploy --env production
-      - curl $SWA_API_URL -X GET -v
+      - |
+        curl $SWA_API_URL -X GET --header 'authorization: Bearer ${TOKEN}' -v
       - echo $SWA_API_URL
