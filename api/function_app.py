@@ -1,8 +1,9 @@
 import azure.functions as func
 from db.repos import upsert_bookmark, list_bookmarks, get_bookmark
 from db.models import Bookmark
-from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse, CorsResponse
+from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
 from auth.auth import verify
+from web.page import get_pageinfo
 
 app = func.FunctionApp()
 
@@ -35,6 +36,9 @@ def handle_get_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
 def create_bookmark(req: func.HttpRequest) -> func.HttpResponse:
     try:
         bookmark = Bookmark.model_validate(req.get_json())
+        page = get_pageinfo(bookmark.url)
+        bookmark.title = page.title
+        bookmark.description = page.description
         upsert_bookmark(bookmark=bookmark)
         return CreateResponse(success=True).ok()
     except Exception as e:
@@ -42,8 +46,8 @@ def create_bookmark(req: func.HttpRequest) -> func.HttpResponse:
 
 @app.route(route='bookmarks', methods=['OPTIONS'], auth_level=func.AuthLevel.ANONYMOUS)
 def handle_options_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
-    return CorsResponse().ok()
+    return func.HttpResponse('', status_code=200)
 
 @app.route(route='bookmarks/{id}', methods=['OPTIONS'], auth_level=func.AuthLevel.ANONYMOUS)
 def handle_options_bookmark(req: func.HttpRequest) -> func.HttpResponse:
-    return CorsResponse().ok()
+    return func.HttpResponse('', status_code=200)
