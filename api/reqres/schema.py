@@ -37,7 +37,3 @@ class ErrorResponse(BaseModel):
 
     def err404(self) -> func.HttpResponse:
         return func.HttpResponse('{}', mimetype='application/json', status_code=404)
-
-class CorsResponse(BaseModel):
-    def ok(self) -> func.HttpResponse:
-        return func.HttpResponse('', status_code=200)
