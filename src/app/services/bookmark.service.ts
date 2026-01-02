@@ -46,20 +46,11 @@ export class BookmarkService {
     })
   }
 
-  searchBookmarks(query: string): Bookmark[] {
-    const lowerQuery = query.toLowerCase()
-    return this.bookmarks().filter(
-      (b) => b.title.toLowerCase().includes(lowerQuery) || b.url.toLowerCase().includes(lowerQuery)
+  searchBookmarks(query: string) {
+    return this.http.get<{ items: Bookmark[] }>(this.apiUrl, {
+      params: { keyword: query }
+    }).pipe(
+      map(res => res.items)
     )
-  }
-
-  getBookmarksByDomain(domain: string): Bookmark[] {
-    return this.bookmarks().filter((b) => {
-      try {
-        return new URL(b.url).hostname === domain
-      } catch {
-        return false
-      }
-    })
   }
 }

@@ -31,8 +31,14 @@ export class SearchComponent implements OnInit {
 
   performSearch() {
     if (this.searchQuery.trim()) {
-      this.searchResults = this.bookmarkService.searchBookmarks(this.searchQuery)
-      this.hasSearched = true
+      this.bookmarkService.searchBookmarks(this.searchQuery).subscribe({
+        next: (results) => {
+          this.searchResults = results
+          this.hasSearched = true
+        },
+        error: (err) => console.error('Search failed', err),
+      })
+
       // Update URL with query parameter
       this.router.navigate([], {
         relativeTo: this.route,
@@ -65,6 +71,6 @@ export class SearchComponent implements OnInit {
   }
 
   goToDomain(domain: string) {
-    this.router.navigate(['/domain', domain])
+    this.router.navigate(['/search'], { queryParams: { q: domain } })
   }
 }
