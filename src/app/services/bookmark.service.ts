@@ -1,33 +1,67 @@
 import { Injectable, signal } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
 
 export interface Bookmark {
   id: string
   url: string
   title: string
-  createdAt: Date
+  createdAt?: Date
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookmarkService {
-  bookmarks = signal<Bookmark[]>([
-    { id: '1', url: 'https://github.com', title: 'GitHub', createdAt: new Date() },
-    { id: '2', url: 'https://stackoverflow.com', title: 'Stack Overflow', createdAt: new Date() },
-    { id: '3', url: 'https://developer.mozilla.org', title: 'MDN Web Docs', createdAt: new Date() },
-  ])
+  bookmarks = signal<Bookmark[]>([])
+  private apiUrl = '/api/bookmarks'
+
+  constructor(private http: HttpClient) {
+    this.loadBookmarks()
+  }
+
+  private loadBookmarks() {
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    this.http
+      .get<{ items: Bookmark[] }>(this.apiUrl, {
+        headers: { 'X-Authorization': `Bearer ${token}` },
+      })
+      .subscribe({
+        next: (response) => {
+          this.bookmarks.set(response.items)
+        },
+        error: (error) => {
+          console.error('Failed to load bookmarks:', error)
+        },
+      })
+  }
 
   addBookmark(url: string) {
     try {
       new URL(url)
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Not authenticated')
+
       const title = new URL(url).hostname || url
       const bookmark: Bookmark = {
         id: Date.now().toString(),
         url,
         title,
-        createdAt: new Date(),
       }
-      this.bookmarks.update((current) => [bookmark, ...current])
+      this.http
+        .post<{ success: boolean }>(this.apiUrl, bookmark, {
+          headers: { 'X-Authorization': `Bearer ${token}` },
+        })
+        .subscribe({
+          next: () => {
+            this.loadBookmarks()
+          },
+          error: (error) => {
+            console.error('Failed to add bookmark:', error)
+            throw error
+          },
+        })
       return bookmark
     } catch {
       throw new Error('Invalid URL')
@@ -35,7 +69,21 @@ export class BookmarkService {
   }
 
   deleteBookmark(id: string) {
-    this.bookmarks.update((current) => current.filter((b) => b.id !== id))
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    this.http
+      .delete(`${this.apiUrl}/${id}`, {
+        headers: { 'X-Authorization': `Bearer ${token}` },
+      })
+      .subscribe({
+        next: () => {
+          this.loadBookmarks()
+        },
+        error: (error) => {
+          console.error('Failed to delete bookmark:', error)
+        },
+      })
   }
 
   searchBookmarks(query: string): Bookmark[] {

@@ -1,13 +1,7 @@
 import { Component, input, output, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
-
-interface Bookmark {
-  id: string
-  url: string
-  title: string
-  createdAt: Date
-}
+import { Bookmark } from '../../services/bookmark.service'
 
 @Component({
   selector: 'app-bookmarks-list',
