@@ -15,7 +15,7 @@ class ViewResponse(BaseModel):
     def ok(self) -> func.HttpResponse:
         return func.HttpResponse(self.model_dump_json(), mimetype='application/json', status_code=200)
 
-class CreateResponse(BaseModel):
+class MutateResponse(BaseModel):
     success: bool
 
     def ok(self) -> func.HttpResponse:
