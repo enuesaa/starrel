@@ -1,9 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, inject, OnInit, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router, RouterModule, ActivatedRoute } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import { BookmarkService, Bookmark } from '../../services/bookmark.service'
 import { HeaderComponent } from '../../components/header/header.component'
+import { filter, finalize, map, switchMap, tap } from 'rxjs'
 
 @Component({
   selector: 'app-search',
@@ -17,40 +18,50 @@ export class SearchComponent implements OnInit {
   private bookmarkService = inject(BookmarkService)
 
   searchQuery = ''
-  searchResults: Bookmark[] = []
-  hasSearched = false
+
+  // State signals
+  searchResults = signal<Bookmark[]>([])
+  isSearching = signal(false)
+  hasSearched = signal(false)
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      if (params['q']) {
-        this.searchQuery = params['q']
-        this.performSearch()
+    this.route.queryParams.pipe(
+      filter(params => params['q']),
+      tap(() => {
+        this.isSearching.set(true)
+        this.hasSearched.set(true)
+        this.searchResults.set([])
+      }),
+      map(params => params['q']),
+      switchMap(query => {
+        this.searchQuery = query // Sync input
+        return this.bookmarkService.searchBookmarks(query).pipe(
+          finalize(() => this.isSearching.set(false))
+        )
+      })
+    ).subscribe({
+      next: (results) => {
+        this.searchResults.set(results)
+      },
+      error: (err) => {
+        console.error('Search failed', err)
+        this.searchResults.set([])
       }
     })
   }
 
   performSearch() {
-    if (this.searchQuery.trim()) {
-      this.bookmarkService.searchBookmarks(this.searchQuery).subscribe({
-        next: (results) => {
-          this.searchResults = results
-          this.hasSearched = true
-        },
-        error: (err) => console.error('Search failed', err),
-      })
-
-      // Update URL with query parameter
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { q: this.searchQuery },
-      })
-    }
+    if (!this.searchQuery.trim()) return
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: this.searchQuery },
+    })
   }
 
   onSearchKeyup() {
     if (this.searchQuery.trim() === '') {
-      this.searchResults = []
-      this.hasSearched = false
+      this.searchResults.set([])
+      this.hasSearched.set(false)
     }
   }
 

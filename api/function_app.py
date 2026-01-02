@@ -11,7 +11,7 @@ app = func.FunctionApp()
 def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
     try:
         verify_request(req)
-        keyword = req.route_params.get('keyword')
+        keyword = req.params.get('keyword')
         if keyword is None:
             bookmarks = list_bookmarks()
             return ListResponse(items=bookmarks).ok()
