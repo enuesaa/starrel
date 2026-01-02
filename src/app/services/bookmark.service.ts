@@ -1,6 +1,8 @@
-import { Injectable, signal } from '@angular/core'
+import { Injectable, signal, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { map, Observable, of, startWith } from 'rxjs'
+import { AuthService } from '@auth0/auth0-angular'
+import { map, switchMap, take } from 'rxjs'
+import { environment } from '../../environments/environment'
 
 export interface Bookmark {
   id: string
@@ -14,64 +16,62 @@ export interface Bookmark {
 })
 export class BookmarkService {
   bookmarks = signal<Bookmark[]>([])
-  private apiUrl = '/api/bookmarks'
-
-  constructor(private http: HttpClient) { }
+  private apiUrl = `${environment.apiBaseUrl}/bookmarks`
+  private http = inject(HttpClient)
+  private auth = inject(AuthService)
 
   listBookmarks() {
-    // const token = localStorage.getItem('token');
-    // if (!token) return;
-
-    this.http
-      .get<{ body: { data: Bookmark[] } }>(this.apiUrl, {
-        // headers: { 'X-Authorization': `Bearer ${token}` },
-      })
-      .pipe(map(res => res.body.data))
-      .subscribe({
-        next: (data) => this.bookmarks.set(data),
-        error: (err) => console.error('Failed to load bookmarks', err)
-      });
+    this.auth.getAccessTokenSilently().pipe(
+      take(1),
+      switchMap(token => {
+        return this.http.get<{ body: { data: Bookmark[] } }>(this.apiUrl, {
+          headers: { 'X-Authorization': `Bearer ${token}` },
+        })
+      }),
+      map(res => res.body.data)
+    ).subscribe({
+      next: (data) => this.bookmarks.set(data),
+      error: (err) => console.error('Failed to load bookmarks', err)
+    });
   }
 
   addBookmark(url: string) {
     try {
       new URL(url)
-      // const token = localStorage.getItem('token')
-      // if (!token) throw new Error('Not authenticated')
-
       const body = { url }
 
-      this.http
-        .post<{ success: boolean; data: Bookmark }>(this.apiUrl, body, {
-          // headers: { 'X-Authorization': `Bearer ${token}` },
+      this.auth.getAccessTokenSilently().pipe(
+        take(1),
+        switchMap(token => {
+          return this.http.post<{ success: boolean; data: Bookmark }>(this.apiUrl, body, {
+            headers: { 'X-Authorization': `Bearer ${token}` },
+          })
         })
-        .subscribe({
-          next: () => {
-            // Refresh list after add, or optimistically update. 
-            // For simplicity/reliability with server logic (e.g. ID generation), we refresh.
-            this.listBookmarks();
-          },
-          error: (err) => console.error('Failed to add bookmark', err)
-        })
+      ).subscribe({
+        next: () => {
+          this.listBookmarks();
+        },
+        error: (err) => console.error('Failed to add bookmark', err)
+      })
     } catch {
       throw new Error('Invalid URL')
     }
   }
 
   deleteBookmark(id: string) {
-    // const token = localStorage.getItem('token')
-    // if (!token) return
-
-    this.http
-      .delete(`${this.apiUrl}/${id}`, {
-        // headers: { 'X-Authorization': `Bearer ${token}` },
+    this.auth.getAccessTokenSilently().pipe(
+      take(1),
+      switchMap(token => {
+        return this.http.delete(`${this.apiUrl}/${id}`, {
+          headers: { 'X-Authorization': `Bearer ${token}` },
+        })
       })
-      .subscribe({
-        next: () => {
-          this.listBookmarks();
-        },
-        error: (err) => console.error('Failed to delete bookmark', err)
-      })
+    ).subscribe({
+      next: () => {
+        this.listBookmarks();
+      },
+      error: (err) => console.error('Failed to delete bookmark', err)
+    })
   }
 
   searchBookmarks(query: string): Bookmark[] {
