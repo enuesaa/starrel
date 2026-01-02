@@ -16,52 +16,61 @@ export class BookmarkService {
   bookmarks = signal<Bookmark[]>([])
   private apiUrl = '/api/bookmarks'
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  listBookmarks(): Observable<Bookmark[]> {
-    console.log('a')
-    const token = localStorage.getItem('token');
-    if (!token) return of([]);
+  listBookmarks() {
+    // const token = localStorage.getItem('token');
+    // if (!token) return;
 
-    return this.http
+    this.http
       .get<{ body: { data: Bookmark[] } }>(this.apiUrl, {
-        headers: { 'X-Authorization': `Bearer ${token}` },
+        // headers: { 'X-Authorization': `Bearer ${token}` },
       })
-      .pipe(
-        map(res => res.body.data)
-      )
-      .pipe(startWith([]));
+      .pipe(map(res => res.body.data))
+      .subscribe({
+        next: (data) => this.bookmarks.set(data),
+        error: (err) => console.error('Failed to load bookmarks', err)
+      });
   }
 
   addBookmark(url: string) {
     try {
       new URL(url)
-      const token = localStorage.getItem('token')
-      if (!token) throw new Error('Not authenticated')
+      // const token = localStorage.getItem('token')
+      // if (!token) throw new Error('Not authenticated')
 
-      const title = new URL(url).hostname || url
-      const bookmark: Bookmark = {
-        id: Date.now().toString(),
-        url,
-        title,
-      }
+      const body = { url }
+
       this.http
-        .post<{ success: boolean }>(this.apiUrl, bookmark, {
-          headers: { 'X-Authorization': `Bearer ${token}` },
+        .post<{ success: boolean; data: Bookmark }>(this.apiUrl, body, {
+          // headers: { 'X-Authorization': `Bearer ${token}` },
         })
-      return bookmark
+        .subscribe({
+          next: () => {
+            // Refresh list after add, or optimistically update. 
+            // For simplicity/reliability with server logic (e.g. ID generation), we refresh.
+            this.listBookmarks();
+          },
+          error: (err) => console.error('Failed to add bookmark', err)
+        })
     } catch {
       throw new Error('Invalid URL')
     }
   }
 
   deleteBookmark(id: string) {
-    const token = localStorage.getItem('token')
-    if (!token) return
+    // const token = localStorage.getItem('token')
+    // if (!token) return
 
     this.http
       .delete(`${this.apiUrl}/${id}`, {
-        headers: { 'X-Authorization': `Bearer ${token}` },
+        // headers: { 'X-Authorization': `Bearer ${token}` },
+      })
+      .subscribe({
+        next: () => {
+          this.listBookmarks();
+        },
+        error: (err) => console.error('Failed to delete bookmark', err)
       })
   }
 

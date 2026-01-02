@@ -6,6 +6,6 @@
     <app-add-bookmark (addBookmark)="onAddBookmarkClick($event)"></app-add-bookmark>
 
     <!-- Bookmarks List Component -->
-    <app-bookmarks-list [bookmarks]="bookmarks | async" (deleteBookmark)="deleteBookmark($event)"></app-bookmarks-list>
+    <app-bookmarks-list [bookmarks]="bookmarks()" (deleteBookmark)="deleteBookmark($event)"></app-bookmarks-list>
   </main>
 </div>

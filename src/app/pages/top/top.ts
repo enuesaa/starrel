@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AddBookmarkComponent } from './add-bookmark.component'
@@ -12,14 +12,18 @@ import { environment } from '../../../environments/environment'
   imports: [CommonModule, RouterModule, AddBookmarkComponent, BookmarksListComponent, HeaderComponent],
   templateUrl: './top.html',
 })
-export class Top {
+export class Top implements OnInit {
   protected bookmarkService = inject(BookmarkService)
 
   protected readonly title = environment.appName
   protected readonly environment = environment
 
+  ngOnInit() {
+    this.bookmarkService.listBookmarks();
+  }
+
   get bookmarks() {
-    return this.bookmarkService.listBookmarks();
+    return this.bookmarkService.bookmarks;
   }
 
   onAddBookmarkClick(url: string) {

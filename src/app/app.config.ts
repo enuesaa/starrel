@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core'
 import { provideRouter, withHashLocation } from '@angular/router'
+import { provideHttpClient } from '@angular/common/http'
 import { provideAuth0 } from '@auth0/auth0-angular'
 import { environment } from '../environments/environment'
 
@@ -9,6 +10,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withHashLocation()),
+    provideHttpClient(),
     provideAuth0({
       domain: environment.authDomain,
       clientId: environment.authClientId,
