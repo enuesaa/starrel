@@ -3,4 +3,5 @@ export const environment = {
   appName: 'Starrel',
   authDomain: 'YOUR_AUTH0_APP_DOMAIN',
   authClientId: 'YOUR_AUTH0_APP_CLIENT_ID',
+  apiBaseUrl: 'https://example.com/api'
 }

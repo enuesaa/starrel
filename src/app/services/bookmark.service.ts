@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
+import { map, Observable, of, startWith } from 'rxjs'
 
 export interface Bookmark {
   id: string
@@ -15,26 +16,21 @@ export class BookmarkService {
   bookmarks = signal<Bookmark[]>([])
   private apiUrl = '/api/bookmarks'
 
-  constructor(private http: HttpClient) {
-    this.loadBookmarks()
-  }
+  constructor(private http: HttpClient) {}
 
-  private loadBookmarks() {
-    const token = localStorage.getItem('token')
-    if (!token) return
+  listBookmarks(): Observable<Bookmark[]> {
+    console.log('a')
+    const token = localStorage.getItem('token');
+    if (!token) return of([]);
 
-    this.http
-      .get<{ items: Bookmark[] }>(this.apiUrl, {
+    return this.http
+      .get<{ body: { data: Bookmark[] } }>(this.apiUrl, {
         headers: { 'X-Authorization': `Bearer ${token}` },
       })
-      .subscribe({
-        next: (response) => {
-          this.bookmarks.set(response.items)
-        },
-        error: (error) => {
-          console.error('Failed to load bookmarks:', error)
-        },
-      })
+      .pipe(
+        map(res => res.body.data)
+      )
+      .pipe(startWith([]));
   }
 
   addBookmark(url: string) {
@@ -53,15 +49,6 @@ export class BookmarkService {
         .post<{ success: boolean }>(this.apiUrl, bookmark, {
           headers: { 'X-Authorization': `Bearer ${token}` },
         })
-        .subscribe({
-          next: () => {
-            this.loadBookmarks()
-          },
-          error: (error) => {
-            console.error('Failed to add bookmark:', error)
-            throw error
-          },
-        })
       return bookmark
     } catch {
       throw new Error('Invalid URL')
@@ -75,14 +62,6 @@ export class BookmarkService {
     this.http
       .delete(`${this.apiUrl}/${id}`, {
         headers: { 'X-Authorization': `Bearer ${token}` },
-      })
-      .subscribe({
-        next: () => {
-          this.loadBookmarks()
-        },
-        error: (error) => {
-          console.error('Failed to delete bookmark:', error)
-        },
       })
   }
 
