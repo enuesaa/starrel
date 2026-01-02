@@ -7,8 +7,22 @@ def list_bookmarks() -> List[Bookmark]:
     db = connect()
     items = db.query_items(
         query="SELECT * FROM c WHERE c.type = @type",
-        parameters=[{"name": "@type", "value": "favorite"}],
+        parameters=[
+            {"name": "@type", "value": "favorite"},
+        ],
         enable_cross_partition_query=False,
+    )
+    return [Bookmark.model_validate(d) for d in items]
+
+def search_bookmarks(keyword: str) -> List[Bookmark]:
+    db = connect()
+    items = db.query_items(
+        query="SELECT * FROM c WHERE c.type = @type AND (CONTAINS(c.url, @kw) OR CONTAINS(c.title, @kw) OR CONTAINS(c.description, @kw))",
+        parameters=[
+            {"name": "@type", "value": "favorite"},
+            {"name": "@kw", "value": keyword},
+        ],
+        enable_cross_partition_query=False
     )
     return [Bookmark.model_validate(d) for d in items]
 
@@ -17,7 +31,7 @@ def get_bookmark(id: str) -> Bookmark|None:
     try:
         data = db.read_item(
             item=id,
-            partition_key="/favorite",
+            partition_key="favorite",
         )
     except CosmosResourceNotFoundError:
         return None
@@ -31,4 +45,4 @@ def upsert_bookmark(bookmark: Bookmark) -> Bookmark:
 
 def delete_bookmark(id: str) -> None:
     db = connect()
-    db.delete_item(item=id, partition_key="/favorite")
+    db.delete_item(item=id, partition_key="favorite")

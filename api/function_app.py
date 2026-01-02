@@ -1,5 +1,5 @@
 import azure.functions as func
-from db.repos import upsert_bookmark, list_bookmarks, get_bookmark, delete_bookmark
+from db.repos import upsert_bookmark, list_bookmarks, search_bookmarks, get_bookmark, delete_bookmark
 from db.models import Bookmark
 from reqres.schema import ListResponse, ViewResponse, MutateResponse, ErrorResponse
 from auth.auth import verify_request
@@ -11,7 +11,11 @@ app = func.FunctionApp()
 def handle_list_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
     try:
         verify_request(req)
-        bookmarks = list_bookmarks()
+        keyword = req.route_params.get('keyword')
+        if keyword is None:
+            bookmarks = list_bookmarks()
+            return ListResponse(items=bookmarks).ok()
+        bookmarks = search_bookmarks(keyword)
         return ListResponse(items=bookmarks).ok()
     except Exception as e:
         return ErrorResponse(error=e).err400()
