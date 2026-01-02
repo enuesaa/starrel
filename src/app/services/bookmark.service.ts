@@ -24,11 +24,11 @@ export class BookmarkService {
     this.auth.getAccessTokenSilently().pipe(
       take(1),
       switchMap(token => {
-        return this.http.get<{ body: { data: Bookmark[] } }>(this.apiUrl, {
+        return this.http.get<{ items: Bookmark[] }>(this.apiUrl, {
           headers: { 'X-Authorization': `Bearer ${token}` },
         })
       }),
-      map(res => res.body.data)
+      map(res => res.items)
     ).subscribe({
       next: (data) => this.bookmarks.set(data),
       error: (err) => console.error('Failed to load bookmarks', err)
