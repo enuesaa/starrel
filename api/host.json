@@ -2,15 +2,14 @@
   "version": "2.0",
   "extensionBundle": {
     "id": "Microsoft.Azure.Functions.ExtensionBundle",
-    "version": "[1.*, 2.0.0)"
+    "version": "[4.*, 5.0.0)"
   },
   "extensions": {
     "http": {
       "customHeaders": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Credentials": "true"
+        "Access-Control-Allow-Headers": "*"
       }
     }
   }
