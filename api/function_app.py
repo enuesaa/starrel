@@ -1,7 +1,7 @@
 import azure.functions as func
 from db.repos import upsert_bookmark, list_bookmarks, get_bookmark
 from db.models import Bookmark
-from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse
+from reqres.schema import ListResponse, ViewResponse, CreateResponse, ErrorResponse, CorsResponse
 from auth.auth import verify
 
 app = func.FunctionApp()
@@ -39,3 +39,11 @@ def create_bookmark(req: func.HttpRequest) -> func.HttpResponse:
         return CreateResponse(success=True).ok()
     except Exception as e:
         return ErrorResponse(error=e).err400()
+
+@app.route(route='bookmarks', methods=['OPTIONS'], auth_level=func.AuthLevel.ANONYMOUS)
+def handle_options_bookmarks(req: func.HttpRequest) -> func.HttpResponse:
+    return CorsResponse().ok()
+
+@app.route(route='bookmarks/{id}', methods=['OPTIONS'], auth_level=func.AuthLevel.ANONYMOUS)
+def handle_options_bookmark(req: func.HttpRequest) -> func.HttpResponse:
+    return CorsResponse().ok()
