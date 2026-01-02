@@ -19,6 +19,10 @@ export class BookmarkService {
   private apiUrl = `${environment.apiBaseUrl}/bookmarks`
   private http = inject(HttpClient)
 
+  constructor() {
+    this.loadBookmarks()
+  }
+
   loadBookmarks() {
     this.isLoading.set(true)
     this.http.get<{ items: Bookmark[] }>(this.apiUrl).pipe(
