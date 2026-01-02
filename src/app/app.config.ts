@@ -30,10 +30,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withHashLocation()),
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([authInterceptor]),
-    ),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideAuth0({
       domain: environment.authDomain,
       clientId: environment.authClientId,

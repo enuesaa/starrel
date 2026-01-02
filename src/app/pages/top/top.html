@@ -8,7 +8,10 @@
       <p class="text-slate-500 text-lg animate-pulse">Loading bookmarks...</p>
     </div>
 
-    <app-bookmarks-list *ngIf="!isLoading()" [bookmarks]="bookmarks()"
-      (deleteBookmark)="deleteBookmark($event)"></app-bookmarks-list>
+    <app-bookmarks-list
+      *ngIf="!isLoading()"
+      [bookmarks]="bookmarks()"
+      (deleteBookmark)="deleteBookmark($event)"
+    ></app-bookmarks-list>
   </main>
 </div>

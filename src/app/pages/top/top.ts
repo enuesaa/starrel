@@ -16,7 +16,6 @@ export class Top {
   bookmarks = this.bookmarkService.bookmarks
   isLoading = this.bookmarkService.isLoading
 
-
   onAddBookmarkClick(url: string) {
     this.bookmarkService.addBookmark(url)
   }

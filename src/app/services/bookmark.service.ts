@@ -25,13 +25,16 @@ export class BookmarkService {
 
   loadBookmarks() {
     this.isLoading.set(true)
-    this.http.get<{ items: Bookmark[] }>(this.apiUrl).pipe(
-      map(res => res.items),
-      finalize(() => this.isLoading.set(false))
-    ).subscribe({
-      next: (data) => this.bookmarks.set(data),
-      error: (err) => console.error('Failed to load bookmarks', err)
-    });
+    this.http
+      .get<{ items: Bookmark[] }>(this.apiUrl)
+      .pipe(
+        map((res) => res.items),
+        finalize(() => this.isLoading.set(false))
+      )
+      .subscribe({
+        next: (data) => this.bookmarks.set(data),
+        error: (err) => console.error('Failed to load bookmarks', err),
+      })
   }
 
   addBookmark(url: string) {
@@ -47,17 +50,17 @@ export class BookmarkService {
   deleteBookmark(id: string) {
     this.http.delete(`${this.apiUrl}/${id}`).subscribe({
       next: () => {
-        this.loadBookmarks();
+        this.loadBookmarks()
       },
-      error: (err) => console.error('Failed to delete bookmark', err)
+      error: (err) => console.error('Failed to delete bookmark', err),
     })
   }
 
   searchBookmarks(query: string) {
-    return this.http.get<{ items: Bookmark[] }>(this.apiUrl, {
-      params: { keyword: query }
-    }).pipe(
-      map(res => res.items)
-    )
+    return this.http
+      .get<{ items: Bookmark[] }>(this.apiUrl, {
+        params: { keyword: query },
+      })
+      .pipe(map((res) => res.items))
   }
 }

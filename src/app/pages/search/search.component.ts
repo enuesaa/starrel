@@ -24,29 +24,29 @@ export class SearchComponent implements OnInit {
   hasSearched = signal(false)
 
   ngOnInit() {
-    this.route.queryParams.pipe(
-      filter(params => params['q']),
-      tap(() => {
-        this.isSearching.set(true)
-        this.hasSearched.set(true)
-        this.searchResults.set([])
-      }),
-      map(params => params['q']),
-      switchMap(query => {
-        this.searchQuery = query // Sync input
-        return this.bookmarkService.searchBookmarks(query).pipe(
-          finalize(() => this.isSearching.set(false))
-        )
+    this.route.queryParams
+      .pipe(
+        filter((params) => params['q']),
+        tap(() => {
+          this.isSearching.set(true)
+          this.hasSearched.set(true)
+          this.searchResults.set([])
+        }),
+        map((params) => params['q']),
+        switchMap((query) => {
+          this.searchQuery = query // Sync input
+          return this.bookmarkService.searchBookmarks(query).pipe(finalize(() => this.isSearching.set(false)))
+        })
+      )
+      .subscribe({
+        next: (results) => {
+          this.searchResults.set(results)
+        },
+        error: (err) => {
+          console.error('Search failed', err)
+          this.searchResults.set([])
+        },
       })
-    ).subscribe({
-      next: (results) => {
-        this.searchResults.set(results)
-      },
-      error: (err) => {
-        console.error('Search failed', err)
-        this.searchResults.set([])
-      }
-    })
   }
 
   performSearch() {
