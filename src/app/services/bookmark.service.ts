@@ -1,7 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { AuthService } from '@auth0/auth0-angular'
-import { map, switchMap, take } from 'rxjs'
+import { map } from 'rxjs'
 import { environment } from '../../environments/environment'
 
 export interface Bookmark {
@@ -18,16 +17,9 @@ export class BookmarkService {
   bookmarks = signal<Bookmark[]>([])
   private apiUrl = `${environment.apiBaseUrl}/bookmarks`
   private http = inject(HttpClient)
-  private auth = inject(AuthService)
 
   listBookmarks() {
-    this.auth.getAccessTokenSilently().pipe(
-      take(1),
-      switchMap(token => {
-        return this.http.get<{ items: Bookmark[] }>(this.apiUrl, {
-          headers: { 'X-Authorization': `Bearer ${token}` },
-        })
-      }),
+    this.http.get<{ items: Bookmark[] }>(this.apiUrl).pipe(
       map(res => res.items)
     ).subscribe({
       next: (data) => this.bookmarks.set(data),
@@ -36,37 +28,17 @@ export class BookmarkService {
   }
 
   addBookmark(url: string) {
-    try {
-      new URL(url)
-      const body = { url }
-
-      this.auth.getAccessTokenSilently().pipe(
-        take(1),
-        switchMap(token => {
-          return this.http.post<{ success: boolean; data: Bookmark }>(this.apiUrl, body, {
-            headers: { 'X-Authorization': `Bearer ${token}` },
-          })
-        })
-      ).subscribe({
-        next: () => {
-          this.listBookmarks();
-        },
-        error: (err) => console.error('Failed to add bookmark', err)
-      })
-    } catch {
-      throw new Error('Invalid URL')
-    }
+    const body = { url }
+    this.http.post<{ success: boolean; data: Bookmark }>(this.apiUrl, body).subscribe({
+      next: () => {
+        this.listBookmarks()
+      },
+      error: (err) => console.error('Failed to add bookmark', err),
+    })
   }
 
   deleteBookmark(id: string) {
-    this.auth.getAccessTokenSilently().pipe(
-      take(1),
-      switchMap(token => {
-        return this.http.delete(`${this.apiUrl}/${id}`, {
-          headers: { 'X-Authorization': `Bearer ${token}` },
-        })
-      })
-    ).subscribe({
+    this.http.delete(`${this.apiUrl}/${id}`).subscribe({
       next: () => {
         this.listBookmarks();
       },
