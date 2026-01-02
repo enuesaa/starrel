@@ -1,37 +1,27 @@
 import { Component, inject, OnInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { NgIf } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AddBookmarkComponent } from './add-bookmark.component'
 import { BookmarksListComponent } from './bookmarks-list.component'
 import { BookmarkService } from '../../services/bookmark.service'
 import { HeaderComponent } from '../../components/header/header.component'
-import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-top',
-  imports: [CommonModule, RouterModule, AddBookmarkComponent, BookmarksListComponent, HeaderComponent],
+  imports: [NgIf, RouterModule, AddBookmarkComponent, BookmarksListComponent, HeaderComponent],
   templateUrl: './top.html',
 })
 export class Top implements OnInit {
-  protected bookmarkService = inject(BookmarkService)
-
-  protected readonly title = environment.appName
-  protected readonly environment = environment
+  private bookmarkService = inject(BookmarkService)
+  bookmarks = this.bookmarkService.bookmarks
+  isLoading = this.bookmarkService.isLoading
 
   ngOnInit() {
-    this.bookmarkService.listBookmarks();
-  }
-
-  get bookmarks() {
-    return this.bookmarkService.bookmarks;
+    this.bookmarkService.loadBookmarks()
   }
 
   onAddBookmarkClick(url: string) {
-    try {
-      this.bookmarkService.addBookmark(url)
-    } catch (error) {
-      alert('Invalid URL')
-    }
+    this.bookmarkService.addBookmark(url)
   }
 
   deleteBookmark(id: string) {

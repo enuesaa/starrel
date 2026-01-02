@@ -1,6 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { map } from 'rxjs'
+import { map, finalize } from 'rxjs'
 import { environment } from '../../environments/environment'
 
 export interface Bookmark {
@@ -15,12 +15,15 @@ export interface Bookmark {
 })
 export class BookmarkService {
   bookmarks = signal<Bookmark[]>([])
+  isLoading = signal(false)
   private apiUrl = `${environment.apiBaseUrl}/bookmarks`
   private http = inject(HttpClient)
 
-  listBookmarks() {
+  loadBookmarks() {
+    this.isLoading.set(true)
     this.http.get<{ items: Bookmark[] }>(this.apiUrl).pipe(
-      map(res => res.items)
+      map(res => res.items),
+      finalize(() => this.isLoading.set(false))
     ).subscribe({
       next: (data) => this.bookmarks.set(data),
       error: (err) => console.error('Failed to load bookmarks', err)
@@ -31,7 +34,7 @@ export class BookmarkService {
     const body = { url }
     this.http.post<{ success: boolean; data: Bookmark }>(this.apiUrl, body).subscribe({
       next: () => {
-        this.listBookmarks()
+        this.loadBookmarks()
       },
       error: (err) => console.error('Failed to add bookmark', err),
     })
@@ -40,7 +43,7 @@ export class BookmarkService {
   deleteBookmark(id: string) {
     this.http.delete(`${this.apiUrl}/${id}`).subscribe({
       next: () => {
-        this.listBookmarks();
+        this.loadBookmarks();
       },
       error: (err) => console.error('Failed to delete bookmark', err)
     })

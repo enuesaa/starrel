@@ -2,10 +2,13 @@
   <app-header [showSearchButton]="true"></app-header>
 
   <main class="px-6 py-8">
-    <!-- Add Bookmark Component -->
     <app-add-bookmark (addBookmark)="onAddBookmarkClick($event)"></app-add-bookmark>
 
-    <!-- Bookmarks List Component -->
-    <app-bookmarks-list [bookmarks]="bookmarks()" (deleteBookmark)="deleteBookmark($event)"></app-bookmarks-list>
+    <div *ngIf="isLoading()" class="text-center py-12">
+      <p class="text-slate-500 text-lg animate-pulse">Loading bookmarks...</p>
+    </div>
+
+    <app-bookmarks-list *ngIf="!isLoading()" [bookmarks]="bookmarks()"
+      (deleteBookmark)="deleteBookmark($event)"></app-bookmarks-list>
   </main>
 </div>

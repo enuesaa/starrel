@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { NgIf, NgFor } from '@angular/common'
 import { Router, RouterModule, ActivatedRoute } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import { BookmarkService, Bookmark } from '../../services/bookmark.service'
@@ -9,7 +9,7 @@ import { filter, finalize, map, switchMap, tap } from 'rxjs'
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent],
+  imports: [NgIf, NgFor, RouterModule, FormsModule, HeaderComponent],
   templateUrl: './search.component.html',
 })
 export class SearchComponent implements OnInit {
@@ -19,7 +19,6 @@ export class SearchComponent implements OnInit {
 
   searchQuery = ''
 
-  // State signals
   searchResults = signal<Bookmark[]>([])
   isSearching = signal(false)
   hasSearched = signal(false)
@@ -65,23 +64,11 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  goBack() {
-    this.router.navigate(['/'])
-  }
-
   getDomain(url: string): string {
     try {
       return new URL(url).hostname || url
     } catch {
       return url
     }
-  }
-
-  openBookmark(url: string) {
-    window.open(url, '_blank')
-  }
-
-  goToDomain(domain: string) {
-    this.router.navigate(['/search'], { queryParams: { q: domain } })
   }
 }

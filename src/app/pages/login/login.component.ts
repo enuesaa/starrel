@@ -8,9 +8,5 @@ import { AuthService } from '@auth0/auth0-angular'
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  private auth = inject(AuthService)
-
-  loginWithRedirect(): void {
-    this.auth.loginWithRedirect()
-  }
+  protected auth = inject(AuthService)
 }

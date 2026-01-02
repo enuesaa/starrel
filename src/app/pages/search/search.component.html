@@ -50,10 +50,10 @@
               class="text-xs text-slate-600 hover:text-slate-400 transition-colors">
               Open
             </a>
-            <button (click)="goToDomain(getDomain(bookmark.url))"
-              class="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+            <a [routerLink]="['/search']" [queryParams]="{ q: getDomain(bookmark.url) }"
+              class="text-xs text-slate-600 hover:text-slate-400 transition-colors cursor-pointer">
               {{ getDomain(bookmark.url) }}
-            </button>
+            </a>
           </div>
         </div>
       </div>
