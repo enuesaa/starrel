@@ -13,8 +13,21 @@ export class BookmarksListComponent {
   bookmarks = input<Bookmark[]>([])
   deleteBookmark = output<string>()
 
-  onDeleteClick(id: string) {
-    this.deleteBookmark.emit(id)
+  selectedBookmark: Bookmark | null = null
+
+  openDialog(bookmark: Bookmark) {
+    this.selectedBookmark = bookmark
+  }
+
+  closeDialog() {
+    this.selectedBookmark = null
+  }
+
+  onConfirmDelete() {
+    if (this.selectedBookmark) {
+      this.deleteBookmark.emit(this.selectedBookmark.id)
+      this.closeDialog()
+    }
   }
 
   getDomain(url: string): string {

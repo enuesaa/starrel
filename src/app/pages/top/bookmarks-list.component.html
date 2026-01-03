@@ -18,53 +18,118 @@
     <p class="text-slate-600 text-sm mt-1">Paste a URL above to get started</p>
   </div>
 
-  <div *ngIf="bookmarks().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div *ngFor="let bookmark of bookmarks()"
-      class="group relative bg-slate-900/50 hover:bg-slate-800/60 backdrop-blur-md rounded-xl border border-slate-700/50 hover:border-sky-500/30 transition-all duration-300 flex flex-col hover:-translate-y-1 hover:shadow-lg hover:shadow-sky-500/10">
-      <!-- Delete Action -->
-      <button (click)="onDeleteClick(bookmark.id); $event.preventDefault(); $event.stopPropagation()"
-        class="absolute top-3 right-3 p-2 rounded-full text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 z-20"
-        title="Delete bookmark">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 6h18" />
-          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-        </svg>
-      </button>
+  <!-- Table View -->
+  <div *ngIf="bookmarks().length > 0"
+    class="w-full overflow-hidden rounded-xl border border-slate-800 bg-slate-900/30 backdrop-blur-sm">
+    <table class="w-full text-left text-sm table-fixed">
+      <thead class="bg-slate-900/50 text-slate-400 font-medium font-mono text-[11px] uppercase tracking-wider">
+        <tr>
+          <th class="px-2 md:px-4 py-3 border-b border-slate-800 w-8 md:w-12"></th>
+          <th class="px-4 py-3 border-b border-slate-800">Bookmark</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-800/50">
+        <tr *ngFor="let bookmark of bookmarks()" class="group hover:bg-slate-800/40 transition-colors">
 
-      <!-- Main Link Area -->
-      <a [href]="bookmark.url" target="_blank" rel="noopener noreferrer"
-        class="flex-1 p-6 flex flex-col gap-3 group/link">
-        <div class="flex items-start justify-between">
-          <!-- Icon placeholder (could be favicon in future) -->
-          <div
-            class="h-10 w-10 flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 group-hover/link:text-sky-400 group-hover/link:bg-sky-500/10 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 3h6v18h-6M10 17l5-5-5-5M13.8 12H3" />
-            </svg>
+          <!-- Actions Column -->
+          <td class="px-2 md:px-4 py-3 w-8 md:w-12 align-top text-center">
+            <button (click)="openDialog(bookmark)"
+              class="p-1 md:p-1.5 rounded-lg text-slate-500 hover:text-sky-400 hover:bg-sky-500/10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all"
+              title="Show details">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="w-4 h-4 md:w-[18px] md:h-[18px]">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+            </button>
+          </td>
+
+          <!-- Name Column -->
+          <td class="p-2 text-left">
+            <div class="min-w-0">
+              <!-- Title Block -->
+              <a [href]="bookmark.url" target="_blank" rel="noopener noreferrer"
+                class="group/title block group-hover/title:text-sky-400 transition-colors">
+                <h3 class="font-medium text-white text-base md:text-lg line-clamp-4 md:line-clamp-2 leading-snug">
+                  {{ bookmark.title }}
+                </h3>
+              </a>
+
+              <!-- Domain Subtitle (Visible on both PC and Mobile) -->
+              <div class="min-w-0 mt-1">
+                <p class="text-xs md:text-sm text-slate-500 truncate font-mono opacity-80">
+                  {{ getDomain(bookmark.url) }}
+                </p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bookmark Details Dialog -->
+  <div *ngIf="selectedBookmark"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div (click)="$event.stopPropagation()"
+      class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+      <!-- Dialog Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white"></h3>
+        <button (click)="closeDialog()"
+          class="p-2 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Dialog Body -->
+      <div class="p-6 space-y-6">
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Title</label>
+          <p class="text-white font-medium leading-relaxed">{{ selectedBookmark.title }}</p>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">URL</label>
+          <a [href]="selectedBookmark.url" target="_blank" rel="noopener noreferrer"
+            class="block text-sky-400 hover:text-sky-300 hover:underline break-all font-mono text-sm leading-relaxed">
+            {{ selectedBookmark.url }}
+          </a>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Domain</label>
+          <div>
+            <span
+              class="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-slate-800 text-slate-300 border border-slate-700">
+              {{ getDomain(selectedBookmark.url) }}
+            </span>
           </div>
         </div>
+      </div>
 
-        <div>
-          <h3 class="font-bold text-white text-lg truncate group-hover:text-sky-400 transition-colors">
-            {{ bookmark.title }}
-          </h3>
-          <p class="text-sm text-slate-500 truncate mt-1 font-mono opacity-70">
-            {{ bookmark.url }}
-          </p>
-        </div>
-      </a>
-
-      <!-- Footer: Domain Tag -->
-      <div class="px-6 py-3 border-t border-slate-700/50 bg-slate-900/30 rounded-b-xl">
-        <a [routerLink]="['/search']" [queryParams]="{ q: getDomain(bookmark.url) }" class="inline-block">
-          <span
-            class="inline-flex items-center text-xs font-medium text-slate-400 hover:text-sky-400 transition-colors cursor-pointer hover:underline decoration-slate-700 underline-offset-4">
-            {{ getDomain(bookmark.url) }}
-          </span>
-        </a>
+      <!-- Dialog Footer -->
+      <div class="px-6 py-4 bg-slate-900/50 border-t border-slate-800 flex items-center justify-between gap-3">
+        <button (click)="onConfirmDelete()"
+          class="px-4 py-2 rounded-lg text-sm font-semibold text-red-400 hover:bg-red-500/10 transition-colors inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18" />
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+          </svg>
+          Delete
+        </button>
+        <button (click)="closeDialog()"
+          class="px-4 py-2 rounded-lg text-sm font-semibold bg-slate-800 text-white hover:bg-slate-700 transition-colors">
+          Close
+        </button>
       </div>
     </div>
   </div>
