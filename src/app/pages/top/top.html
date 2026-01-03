@@ -1,17 +1,15 @@
-<div class="min-h-screen bg-slate-950">
+<div class="min-h-screen">
   <app-header [showSearchButton]="true"></app-header>
 
-  <main class="px-6 py-8">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
     <app-add-bookmark (addBookmark)="onAddBookmarkClick($event)"></app-add-bookmark>
 
-    <div *ngIf="isLoading()" class="text-center py-12">
-      <p class="text-slate-500 text-lg animate-pulse">Loading bookmarks...</p>
+    <div *ngIf="isLoading()" class="flex flex-col items-center justify-center py-20">
+      <div class="h-10 w-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-slate-400 mt-4 animate-pulse">Loading bookmarks...</p>
     </div>
 
-    <app-bookmarks-list
-      *ngIf="!isLoading()"
-      [bookmarks]="bookmarks()"
-      (deleteBookmark)="deleteBookmark($event)"
-    ></app-bookmarks-list>
+    <app-bookmarks-list *ngIf="!isLoading()" [bookmarks]="bookmarks()"
+      (deleteBookmark)="deleteBookmark($event)"></app-bookmarks-list>
   </main>
 </div>

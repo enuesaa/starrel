@@ -1,1 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
+
+@theme {
+  --font-display: 'Inter', 'sans-serif';
+  --font-body: 'Inter', 'sans-serif';
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+    background-image: radial-gradient(circle at top center, #1e293b 0%, #020617 100%);
+    min-height: 100vh;
+  }
+}
