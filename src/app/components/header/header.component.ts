@@ -22,6 +22,10 @@ export class HeaderComponent {
   goToSearch() {
     this.router.navigate(['/search'])
   }
+  
+  goToRecog() {
+    this.router.navigate(['/recog'])
+  }
 
   goBack() {
     this.router.navigate(['/'])
