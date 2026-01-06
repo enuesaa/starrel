@@ -4,7 +4,7 @@ import { provideHttpClient, withFetch, withInterceptors, HttpInterceptorFn } fro
 import { provideAuth0, AuthService } from '@auth0/auth0-angular'
 import { environment } from '../environments/environment'
 import { inject } from '@angular/core'
-import { switchMap } from 'rxjs'
+import { catchError, switchMap, throwError } from 'rxjs'
 
 const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService)
@@ -17,6 +17,10 @@ const authInterceptor: HttpInterceptorFn = (req, next) => {
           },
         })
         return next(authReq)
+      }),
+      catchError(err => {
+        auth.logout({ logoutParams: { returnTo: window.location.origin } })
+        return throwError(() => err)
       })
     )
   }
@@ -39,7 +43,7 @@ export const appConfig: ApplicationConfig = {
         audience: environment.authAudience,
         scope: 'openid profile email offline_access',
       },
-      cacheLocation: 'localstorage',
+      cacheLocation: 'memory',
       useRefreshTokens: true,
     }),
   ],
