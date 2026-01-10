@@ -2,14 +2,8 @@
   "platform": {
     "apiRuntime": "python:3.11"
   },
-  "routes": [
-    {
-      "route": "/login",
-      "redirect": "/#/login"
-    },
-    {
-      "route": "/recog",
-      "redirect": "/#/recog"
-    }
-  ]
+  "navigationFallback": {
+    "rewrite": "index.html",
+    "exclude": ["/*.{css,js,png,jpg,gif}", "/api/*"]
+  }
 }

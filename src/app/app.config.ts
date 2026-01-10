@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core'
-import { provideRouter, withHashLocation } from '@angular/router'
+import { provideRouter } from '@angular/router'
 import { provideHttpClient, withFetch, withInterceptors, HttpInterceptorFn } from '@angular/common/http'
 import { provideAuth0, AuthService } from '@auth0/auth0-angular'
 import { environment } from '../environments/environment'
@@ -33,13 +33,13 @@ import { routes } from './app.routes'
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withHashLocation()),
+    provideRouter(routes),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideAuth0({
       domain: environment.authDomain,
       clientId: environment.authClientId,
       authorizationParams: {
-        redirect_uri: window.location.href,
+        redirect_uri: window.location.origin,
         audience: environment.authAudience,
         scope: 'openid profile email offline_access',
       },
