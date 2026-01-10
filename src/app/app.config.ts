@@ -5,6 +5,7 @@ import { provideAuth0, AuthService } from '@auth0/auth0-angular'
 import { environment } from '../environments/environment'
 import { inject } from '@angular/core'
 import { catchError, switchMap, throwError } from 'rxjs'
+import { routes } from './app.routes'
 
 const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService)
@@ -27,8 +28,6 @@ const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req)
 }
-
-import { routes } from './app.routes'
 
 export const appConfig: ApplicationConfig = {
   providers: [
