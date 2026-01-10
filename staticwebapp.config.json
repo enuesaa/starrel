@@ -1,5 +1,15 @@
 {
   "platform": {
     "apiRuntime": "python:3.11"
-  }
+  },
+  "routes": [
+    {
+      "route": "/login",
+      "redirect": "/#/login"
+    },
+    {
+      "route": "/recog",
+      "redirect": "/#/recog"
+    }
+  ]
 }
