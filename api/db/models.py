@@ -8,3 +8,4 @@ class Bookmark(BaseModel):
     title: str = Field(default='')
     description: str|None = Field(default=None)
     image: str|None = Field(default=None)
+    star: bool|None = Field(default=None)
