@@ -9,6 +9,7 @@ import { routes } from './app.routes'
 
 const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService)
+
   if (req.url.startsWith(environment.apiBaseUrl)) {
     return auth.getAccessTokenSilently().pipe(
       switchMap((token) => {
@@ -20,12 +21,11 @@ const authInterceptor: HttpInterceptorFn = (req, next) => {
         return next(authReq)
       }),
       catchError(err => {
-        auth.logout({ logoutParams: { returnTo: window.location.origin } })
+        // auth.logout({ logoutParams: { returnTo: window.location.origin } })
         return throwError(() => err)
       })
     )
   }
-
   return next(req)
 }
 
